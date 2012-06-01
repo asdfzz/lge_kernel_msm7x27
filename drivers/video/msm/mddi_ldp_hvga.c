@@ -582,7 +582,7 @@ static int mddi_ldp_lcd_init(void)
 		pinfo->bpp = 16;
 	
 		// vsync config
-		pinfo->lcd.vsync_enable = TRUE;
+		pinfo->lcd.vsync_enable = FALSE;
 		pinfo->lcd.refx100 = (mddi_ldp_rows_per_second * 100) /
                         		mddi_ldp_rows_per_refresh;
 
@@ -595,7 +595,7 @@ static int mddi_ldp_lcd_init(void)
 		pinfo->lcd.v_front_porch = 6;
 		pinfo->lcd.v_pulse_width = 4;
 
-		pinfo->lcd.hw_vsync_mode = TRUE;
+		pinfo->lcd.hw_vsync_mode = FALSE;
 		pinfo->lcd.vsync_notifier_period = (1 * HZ);
 
 		pinfo->bl_max = 4;
