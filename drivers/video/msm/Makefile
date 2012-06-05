@@ -89,6 +89,8 @@ obj-y += mddi_orise.o
 obj-y += mddi_quickvx.o
 obj-y += mddi_hitachi_hvga.o
 obj-y += mddi_sharp_hvga_e720.o
+obj-y += mddi_auo_hvga.o
+obj-y += mddi_auo_hitachi_hvga.o
 
 # LGE_DEV_PORTING UNIVA_S [ks82.jung@lge.com]
 obj-y += mddi_ldp_hvga.o
@@ -106,6 +108,8 @@ obj-$(CONFIG_FB_MSM_MDDI_ORISE) += mddi_orise.o
 obj-$(CONFIG_FB_MSM_MDDI_QUICKVX) += mddi_quickvx.o
 obj-$(CONFIG_FB_MSM_MDDI_HITACHI_HVGA) += mddi_hitachi_hvga.o
 obj-$(CONFIG_FB_MSM_MDDI_SHARP_HVGA_E720) += mddi_sharp_hvga_e720.o
+obj-$(CONFIG_FB_MSM_MDDI_AUO_HVGA) += mddi_auo_hvga.o
+obj-$(CONFIG_FB_MSM_MDDI_AUO_HITACHI_HVGA) += mddi_auo_hitachi_hvga.o
 
 # LGE_DEV_PORTING UNIVA_S [ks82.jung@lge.com]
 obj-$(CONFIG_FB_MSM_MDDI_LDP_HVGA) += mddi_ldp_hvga.o
