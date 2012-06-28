@@ -32,7 +32,10 @@ struct msm_pmic_leds_pdata *leds_pdata = 0;
 
 /*LED has 15 steps (10mA per step). LED's  max power capacity is 150mA. (0~255 level)*/
 #define MAX_KEYPAD_BL_LEVEL	16	// 150mA
-#define TUNED_MAX_KEYPAD_BL_LEVEL	40	// 60mA
+//LGE_DEV_PORTING UNIVA_S/woojin.lee@lge.com/20110610/modified for key LED level of UNIVA
+//#define TUNED_MAX_KEYPAD_BL_LEVEL	127 // 20mA
+#define TUNED_MAX_KEYPAD_BL_LEVEL	63 // 40mA
+//LGE_DEV_PORTING UNIVA_E
 
 
 static void msm_keypad_bl_led_set(struct led_classdev *led_cdev,
@@ -44,7 +47,7 @@ static void msm_keypad_bl_led_set(struct led_classdev *led_cdev,
 	ret = leds_pdata->msm_keypad_led_set(value / TUNED_MAX_KEYPAD_BL_LEVEL);
 #else	/* origin */
 #ifdef CONFIG_MACH_MSM7X27_THUNDERA
-	/* jinkyu.choi
+	/* jinkyu.choi@lge.com
 	 * P505, use the android led interface values, 255,127,0
 	 * LED current is controlled by arm9 AMSS with the given values.
 	 */
@@ -101,25 +104,21 @@ static int __devexit msm_pmic_led_remove(struct platform_device *pdev)
 static int msm_pmic_led_suspend(struct platform_device *dev,
 		pm_message_t state)
 {
-// ALESSI_MUST_BE bob.cho
+	led_classdev_suspend(&msm_kp_bl_led);
+
 #if defined (CONFIG_LGE_UNIFIED_LED)
 	leds_pdata->suspend_custom_leds();
-#else
-	led_classdev_suspend(&msm_kp_bl_led);
 #endif
-// ALESSI_MUST_BE
 	return 0;
 }
 
 static int msm_pmic_led_resume(struct platform_device *dev)
 {
-// ALESSI_MUST_BE bob.cho
+	led_classdev_resume(&msm_kp_bl_led);
 #if defined (CONFIG_LGE_UNIFIED_LED)
 	leds_pdata->resume_custom_leds();
-#else
-	led_classdev_resume(&msm_kp_bl_led);
 #endif
-// ALESSI_MUST_BE
+
 	return 0;
 }
 #else
@@ -127,11 +126,27 @@ static int msm_pmic_led_resume(struct platform_device *dev)
 #define msm_pmic_led_resume NULL
 #endif
 
+#ifdef CONFIG_MACH_LGE
+/* 
+ * 2011-03-08, jinkyu.choi@lge.com
+ * if using the VBAT power,
+ * we should turn off the leds when reboot or power down.
+ */
+static void msm_pmic_led_shutdown(struct platform_device *dev)
+{
+	msm_keypad_bl_led_set(&msm_kp_bl_led, LED_OFF);
+	//printk("%s is done!\n", __func__);
+}
+#endif
+
 static struct platform_driver msm_pmic_led_driver = {
 	.probe		= msm_pmic_led_probe,
 	.remove		= __devexit_p(msm_pmic_led_remove),
 	.suspend	= msm_pmic_led_suspend,
 	.resume		= msm_pmic_led_resume,
+#ifdef  CONFIG_MACH_LGE
+	.shutdown	= msm_pmic_led_shutdown,
+#endif
 	.driver		= {
 		.name	= "pmic-leds",
 		.owner	= THIS_MODULE,
