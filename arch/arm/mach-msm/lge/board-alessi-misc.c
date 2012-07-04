@@ -212,7 +212,7 @@ static int thunderg_gpio_earsense_work_func(void)
 		ept = NULL;
 		printk(KERN_ERR"failed to connect snd svc, error %d\n", rc);
 	}
-
+	
 	hookmsg.args.cb_func = -1;
 	hookmsg.args.client_data = 0;
 
